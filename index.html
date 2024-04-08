@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar Eclipse Timings by Nyasha Choga</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+      }
+      .container {
+        width: 100%;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 4vw; /* Responsive font size based on viewport width */
+        margin-bottom: 4rem;
+      }
+      .time {
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 3vw; /* Responsive font size based on viewport width */
+      }
+      .event {
+        padding: 10px;
+        margin: 0.6rem;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+      .eclipse-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(44, 44, 44, 0.9) 100%
+        );
+        animation: eclipse 10s linear infinite;
+        z-index: -1;
+      }
+      @keyframes eclipse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff; /* White background */
+        text-align: center;
+        font-size: 14px;
+        color: #000; /* Black text */
+      }
+      .stars {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        pointer-events: none;
+      }
+      .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background-color: #fff;
+        border-radius: 50%;
+        animation: twinkling 2s infinite;
+      }
+      @keyframes twinkling {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      /* Media query for smaller screens */
+      @media screen and (max-width: 600px) {
+        h1 {
+          font-size: 8vw; /* Responsive font size based on viewport width */
+        }
+        .time {
+          font-size: 6vw; /* Responsive font size based on viewport width */
+        }
+        .container {
+          height: 100vh; /* Full height for smaller screens */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="eclipse-animation"></div>
+    <div class="stars">
+      <!-- Generating random stars -->
+      <script>
+        const numberOfStars = 100;
+        for (let i = 0; i < numberOfStars; i++) {
+          const star = document.createElement("div");
+          star.className = "star";
+          star.style.top = Math.random() * 100 + "%";
+          star.style.left = Math.random() * 100 + "%";
+          star.style.animationDelay = Math.random() * 5 + "s";
+          document.body.appendChild(star);
+        }
+      </script>
+    </div>
+    <div class="container">
+      <h1>SOLAR ECLIPSE TIMINGS APRIL 8TH 2024</h1>
+      <div class="time event" id="eclipse-begins"></div>
+      <div class="time event" id="totality-begins"></div>
+      <div class="time event" id="totality-ends"></div>
+      <div class="time event" id="eclipse-ends"></div>
+    </div>
+    <footer>
+      <span
+        >Website created by
+        <a
+          href="https://www.instagram.com/nyasha.py/"
+          target="_blank"
+          style="color: #000"
+          >Nyasha Choga</a
+        ></span
+      >
+    </footer>
+    <script>
+      function formatTime(timeString) {
+        const [hour, minute, second] = timeString.split(":");
+        return `${hour}:${minute} ${parseInt(hour) >= 12 ? "aa.m." : "p.m."}`;
+      }
+
+      function updateTimers() {
+        const now = new Date();
+        const eclipseBegins = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          13,
+          52,
+          13
+        ); // 1:52:13 p.m. ET
+        const totalityBegins = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          15,
+          7,
+          37
+        ); // 3:07:37 p.m. ET
+        const totalityEnds = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          15,
+          11,
+          15
+        ); // 3:11:15 p.m. ET
+        const eclipseEnds = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          16,
+          24,
+          16
+        ); // 4:24:16 p.m. ET
+
+        const elements = {
+          "eclipse-begins": eclipseBegins,
+          "totality-begins": totalityBegins,
+          "totality-ends": totalityEnds,
+          "eclipse-ends": eclipseEnds,
+        };
+
+        for (const id in elements) {
+          const element = document.getElementById(id);
+          const eventTime = elements[id];
+          const timeDiff = eventTime - now;
+          const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (timeDiff % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+          const formattedTime = formatTime(
+            eventTime.toLocaleTimeString("en-US", { hour12: true })
+          );
+          element.innerHTML = `<div class="event">${id
+            .replace("-", " ")
+            .toUpperCase()}: ${formattedTime} (In ${hours}h ${minutes}m ${seconds}s)</div>`;
+        }
+      }
+
+      updateTimers();
+      setInterval(updateTimers, 1000);
+    </script>
+  </body>
+</html>
